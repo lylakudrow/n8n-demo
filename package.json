@@ -1,27 +1,52 @@
+// package.json
 {
   "name": "@barchart/aws-lambda-pdf-generator",
+  "description": "Generate PDF files from HTML documents via AWS Lambda using Puppeteer/Chromium.",
+  "author": "Barchart",
+  "homepage": "https://github.com/lylakudrow/n8n-demo#readme",
+  "keywords": [
+    "pdf",
+    "puppeteer",
+    "chromium",
+    "lambda",
+    "serverless",
+    "n8n"
+  ],
   "workspaces": [
     "packages/*"
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/barchart/barchart/aws-lambda-pdf-generator.git"
+    "url": "git+https://github.com/lylakudrow/n8n-demo.git",
+    "directory": "."
   },
+  "bugs": {
+    "url": "https://github.com/lylakudrow/n8n-demo/issues"
+  },
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
     "lint": "lerna run lint --stream",
+    "format": "prettier --write .",
+    "validate": "npm run lint && npm run format -- --check",
     "preversion": "git diff --exit-code",
     "release": "lerna version -m 'Release. Bump version number %v' --tag-version-prefix='' --force-publish",
     "deploy:stage": "lerna run deploy:stage --stream",
-    "deploy:prod": "lerna run deploy:prod --stream"
+    "deploy:prod": "lerna run deploy:prod --stream",
+    "test:n8n": "echo \"n8n test placeholder: hook this up to your n8n workflow later\"",
+    "verify:webhook": "node ./scripts/verify-webhook-signature.js"
   },
   "devDependencies": {
     "jshint": "^2.13.6",
     "lerna": "^6.6.2",
+    "prettier": "^3.3.3",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-webpack": "^5.5.0",
     "webpack": "^5.11.1"
-  },
-  "license": "MIT",
-  "private": true
+  }
 }
