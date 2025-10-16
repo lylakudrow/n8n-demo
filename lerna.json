@@ -1,8 +1,27 @@
+// lerna.json
 {
   "npmClient": "yarn",
+  "useWorkspaces": true,
   "packages": [
     "packages/*"
   ],
-  "version": "3.0.1",
-  "useWorkspaces": true
+  "version": "independent",
+  "command": {
+    "version": {
+      "conventionalCommits": true,
+      "changelogPreset": "conventional-changelog-conventionalcommits",
+      "message": "chore(release): publish",
+      "allowWorkspaceRoot": false,
+      "gitTagVersion": true,
+      "push": true
+    },
+    "publish": {
+      "allowBranch": "master"
+    }
+  },
+  "ignoreChanges": [
+    "**/docs/**",
+    "**/*.md",
+    "**/tests/**"
+  ]
 }
