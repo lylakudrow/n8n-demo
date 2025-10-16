@@ -1,17 +1,48 @@
+# buildspec.yml
 version: 0.2
+
+env:
+  variables:
+    NODE_ENV: production
+  parameter-store:
+    # Example: uncomment and set in Parameter Store for secrets/config
+    # NPM_TOKEN: /n8n-demo/npm_token
+  shell: bash
 
 phases:
   install:
     runtime-versions:
-      nodejs: 20.x
-
+      nodejs: 20
+    commands:
+      - echo "Installing Yarn and dependencies..."
+      - npm install --location=global yarn
+      # Use Yarn with cache to speed up installs
+      - yarn install --frozen-lockfile
   pre_build:
     commands:
-      - npm install yarn --location=global
-      - yarn install
-
+      - echo "Running lint and basic validation..."
+      - yarn lint
+      # Optional: check formatting if you added a format script
+      - if yarn run | grep -q '^format$'; then yarn format --check || true; fi
+      - echo "Writing build metadata..."
+      - echo "{\"commit\":\"$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION)\",\"build_id\":\"$CODEBUILD_BUILD_ID\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > build-info.json
   build:
     commands:
-      - yarn lint
+      - echo "Building packages/api..."
       - cd packages/api
       - make all
+  post_build:
+    commands:
+      - echo "Post-build steps completed."
+
+cache:
+  paths:
+    - 'node_modules/**/*'
+    - '~/.cache/yarn/**/*'
+
+artifacts:
+  files:
+    - build-info.json
+    - packages/api/**/*
+  discard-paths: no
+  base-directory: .
